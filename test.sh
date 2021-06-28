@@ -43,14 +43,20 @@ install_3proxy() {
 gen_3proxy() {
     cat <<EOF
 daemon
-maxconn 1000
+maxconn 2000
+nserver 1.1.1.1
+nserver 8.8.4.4
+nserver 2001:4860:4860::8888
+nserver 2001:4860:4860::8844
 nscache 65536
 timeouts 1 5 30 60 180 1800 15 60
 setgid 65535
 setuid 65535
+stacksize 6291456 
 flush
 auth iponly
-$(awk -F "/" '{print "auth none\n" \
+users $(awk -F "/" 'BEGIN{ORS="";} {print $1 ":CL:" $2 " "}' ${WORKDATA})
+$(awk -F "/" '{print "auth strong\n" \
 "allow " $1 "\n" \
 "proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n" \
 "flush\n"}' ${WORKDATA})
@@ -65,7 +71,7 @@ EOF
 
 upload_proxy() {
     cd $WORKDIR
-    local PASS=Quang123
+    local PASS=dongvanvy
     zip --password $PASS proxy.zip proxy.txt
     URL=$(curl -s --upload-file proxy.zip https://transfer.sh/proxy.zip)
 
@@ -108,7 +114,7 @@ echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
 
 echo "How many proxy do you want to create? Example 500"	
 read COUNT	
-FIRST_PORT=11000	
+FIRST_PORT=13000	
 LAST_PORT=$(($FIRST_PORT + $COUNT))
 
 gen_data >$WORKDIR/data.txt
