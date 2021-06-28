@@ -43,47 +43,11 @@ install_3proxy() {
 gen_3proxy() {
     cat <<EOF
 daemon
-maxconn 2000
-nserver 1.1.1.1
-nserver 8.8.4.4
-nserver 2001:4860:4860::8888
-nserver 2001:4860:4860::8844
+maxconn 1000
 nscache 65536
 timeouts 1 5 30 60 180 1800 15 60
 setgid 65535
 setuid 65535
-stacksize 6291456
-via off
-forwarded_for off
-request_header_access Allow allow all 
-request_header_access Authorization allow all 
-request_header_access WWW-Authenticate allow all 
-request_header_access Proxy-Authorization allow all 
-request_header_access Proxy-Authenticate allow all 
-request_header_access Cache-Control allow all 
-request_header_access Content-Encoding allow all 
-request_header_access Content-Length allow all 
-request_header_access Content-Type allow all 
-request_header_access Date allow all 
-request_header_access Expires allow all 
-request_header_access Host allow all 
-request_header_access If-Modified-Since allow all 
-request_header_access Last-Modified allow all 
-request_header_access Location allow all 
-request_header_access Pragma allow all 
-request_header_access Accept allow all 
-request_header_access Accept-Charset allow all 
-request_header_access Accept-Encoding allow all 
-request_header_access Accept-Language allow all 
-request_header_access Content-Language allow all 
-request_header_access Mime-Version allow all 
-request_header_access Retry-After allow all 
-request_header_access Title allow all 
-request_header_access Connection allow all 
-request_header_access Proxy-Connection allow all 
-request_header_access User-Agent allow all 
-request_header_access Cookie allow all 
-request_header_access All deny all
 flush
 auth iponly
 $(awk -F "/" '{print "auth none\n" \
@@ -101,7 +65,7 @@ EOF
 
 upload_proxy() {
     cd $WORKDIR
-    local PASS=dongvanvy
+    local PASS=$(random)
     zip --password $PASS proxy.zip proxy.txt
     URL=$(curl -s --upload-file proxy.zip https://transfer.sh/proxy.zip)
 
