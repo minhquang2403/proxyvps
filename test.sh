@@ -50,10 +50,9 @@ setgid 65535
 setuid 65535
 flush
 auth iponly
-deny *
-allow * 42.119.155.163,192.168.1.1 * *
+allow * 115.76.204.34,192.168.0.1 * *
 $(awk -F "/" '{print "auth none\n" \
-"allow " 42.119.155.163 "\n" \
+"allow "115.76.204.34"\n" \
 "proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n" \
 "flush\n"}' ${WORKDATA})
 EOF
@@ -67,7 +66,7 @@ EOF
 
 upload_proxy() {
     cd $WORKDIR
-    local PASS=dongvanvy
+    local PASS=Quang123
     zip --password $PASS proxy.zip proxy.txt
     URL=$(curl -s --upload-file proxy.zip https://transfer.sh/proxy.zip)
 
